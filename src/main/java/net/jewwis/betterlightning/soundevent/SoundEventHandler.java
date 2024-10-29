@@ -5,14 +5,7 @@ import net.jewwis.betterlightning.Config;
 import net.jewwis.betterlightning.ticktimer.TickEventHandler;
 import net.jewwis.betterlightning.ticktimer.TickTimer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
@@ -21,8 +14,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.Objects;
-
-import static net.minecraftforge.client.ForgeHooksClient.playSound;
 
 @Mod.EventBusSubscriber(modid = BetterLightning.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class SoundEventHandler {
@@ -42,22 +33,25 @@ public class SoundEventHandler {
                 float x1 = (float) player.getX();
                 float y1 = (float) player.getY();
                 float z1 = (float) player.getZ();
-                int a = getDistance(x1, y1, z1, x2, y2, z2);
 
-                if (a >= Config.distanceShort && a < Config.distanceMedium) {
-                    TickEventHandler.addTimer(new TickTimer(Config.timeShort, () -> {
-                        player.playSound(ModSounds.SHORTTHUNDER.get(), 0.8f, 1.0f);
-                    }));
-                } else if (a >= Config.distanceMedium && a < Config.distanceFar) {
-                    TickEventHandler.addTimer(new TickTimer(Config.timeMedium, () -> {
-                        player.playSound(ModSounds.MEDIUMTHUNDER.get(), 2.0f, 1.0f);
-                    }));
-                } else if (a >= Config.distanceFar) {
-                    TickEventHandler.addTimer(new TickTimer(Config.timeLong, () -> {
-                        player.playSound(ModSounds.FARTHUNDER.get(), 1.0f, 1.0f);
-                    }));
-                } else {
-                    player.playSound(ModSounds.NORMALTHUNDER.get(), 1.0f, 1.0f);
+                boolean isUnderground = y1<Config.muffleBelow;
+                if (!isUnderground) {
+                    int a = getDistance(x1, y1, z1, x2, y2, z2);
+                    if (a >= Config.distanceShort && a < Config.distanceMedium) {
+                        TickEventHandler.addTimer(new TickTimer(Config.timeShort, () -> {
+                            player.playSound(ModSounds.SHORTTHUNDER.get(), 0.8f, 1.0f);
+                        }));
+                    } else if (a >= Config.distanceMedium && a < Config.distanceFar) {
+                        TickEventHandler.addTimer(new TickTimer(Config.timeMedium, () -> {
+                            player.playSound(ModSounds.MEDIUMTHUNDER.get(), 2.0f, 1.0f);
+                        }));
+                    } else if (a >= Config.distanceFar) {
+                        TickEventHandler.addTimer(new TickTimer(Config.timeLong, () -> {
+                            player.playSound(ModSounds.FARTHUNDER.get(), 1.0f, 1.0f);
+                        }));
+                    } else {
+                        player.playSound(ModSounds.NORMALTHUNDER.get(), 1.0f, 1.0f);
+                    }
                 }
 
             }

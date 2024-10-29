@@ -22,6 +22,8 @@ public class Config {
             .define("Medium Delay", 85);
     private static final ForgeConfigSpec.ConfigValue<Integer> Far_Delay = BUILDER.comment("Ticks (Default: 130)")
             .define("Far Delay", 130);
+    private static final ForgeConfigSpec.ConfigValue<Integer> Muffle_Below = BUILDER.comment("Elevation to mute lightning sounds beneath")
+            .define("Muffle Below", 30);
 
 
 
@@ -33,6 +35,7 @@ public class Config {
     public static int timeShort;
     public static int timeMedium;
     public static int timeLong;
+    public static int muffleBelow;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event){
@@ -43,6 +46,8 @@ public class Config {
         timeShort = Short_Delay.get();
         timeMedium = Medium_Delay.get();
         timeLong = Far_Delay.get();
+
+        muffleBelow = Muffle_Below.get();
     }
 
 }
